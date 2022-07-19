@@ -8,10 +8,9 @@ const Movies = ({ movies, deleteMovie, increment, decrement }) => {
       return sum + movie.rating;
     }, 0) / movies.length
   ).toFixed(1);
-  console.log(averageRating);
   return (
     <div>
-      <h2>The average rating is {averageRating}</h2>
+      <h2>The average rating is {!movies.length ? 0 : averageRating}</h2>
       <ul>
         {movies.map((movie) => {
           return (
