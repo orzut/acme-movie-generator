@@ -6,6 +6,8 @@ import thunk from "redux-thunk";
 const GENERATE_MOVIE = "GENERATE_MOVIE";
 const FETCH_MOVIES = "FETCH_MOVIES";
 const DELETE_MOVIE = "DELETE_MOVIE";
+const INCREMENT_RATING = "INCREMENT_RATING";
+const DECREMENT_RATING = "DECREMENT_RATING";
 
 const _generateMovie = (movie) => {
   return {
@@ -26,6 +28,45 @@ const _deleteMovie = (movie) => {
     type: DELETE_MOVIE,
     movie,
   };
+};
+
+const _incrementRating = (movie) => {
+  return {
+    type: INCREMENT_RATING,
+    movie,
+  };
+};
+
+const _decrementRating = (movie) => {
+  return {
+    type: DECREMENT_RATING,
+    movie,
+  };
+};
+
+const moviesReducer = (state = [], action) => {
+  if (action.type === GENERATE_MOVIE) {
+    return [...state, action.movie];
+  }
+  if (action.type === FETCH_MOVIES) {
+    return action.movies;
+  }
+  if (action.type === DELETE_MOVIE) {
+    return state.filter((movie) => movie.id !== action.movie.id);
+  }
+  if (action.type === INCREMENT_RATING) {
+    action.movie = { ...action.movie, rating: action.movie.rating + 1 };
+    return state.map((movie) =>
+      movie.id === action.movie.id ? action.movie : movie
+    );
+  }
+  if (action.type === DECREMENT_RATING) {
+    action.movie = { ...action.movie, rating: action.movie.rating - 1 };
+    return state.map((movie) =>
+      movie.id === action.movie.id ? action.movie : movie
+    );
+  }
+  return state;
 };
 
 export const generateMovie = (movie) => {
@@ -49,17 +90,28 @@ export const deleteMovie = (movie) => {
   };
 };
 
-const moviesReducer = (state = [], action) => {
-  if (action.type === GENERATE_MOVIE) {
-    return [...state, action.movie];
-  }
-  if (action.type === FETCH_MOVIES) {
-    return action.movies;
-  }
-  if (action.type === DELETE_MOVIE) {
-    return state.filter((movie) => movie.id !== action.movie.id);
-  }
-  return state;
+export const incrementRating = (movie) => {
+  return async (dispatch) => {
+    try {
+      const updated = (await axios.put(`/api/movies/${movie.id}`, movie)).data;
+      dispatch(_incrementRating(updated));
+    } catch (err) {
+      console.log(err.response.data);
+      alert("Rating should be between 1 and 5");
+    }
+  };
+};
+
+export const decrementRating = (movie) => {
+  return async (dispatch) => {
+    try {
+      const updated = (await axios.put(`/api/movies/${movie.id}`, movie)).data;
+      dispatch(_decrementRating(updated));
+    } catch (err) {
+      console.log(err.response.data);
+      alert("Rating should be between 1 and 5");
+    }
+  };
 };
 
 const reducer = combineReducers({ movies: moviesReducer });

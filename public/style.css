@@ -21,13 +21,14 @@ li {
   padding: 0.5rem;
   list-style-type: none;
   display: flex;
-  flex-direction: column;
   border: solid 1px gray;
   margin: 1rem;
+  align-items: center;
 }
-li > div {
+li > * {
   display: flex;
-  justify-content: space-around;
+  margin: 1rem;
+  align-items: center;
 }
 
 h1 {

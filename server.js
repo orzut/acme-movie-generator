@@ -35,6 +35,15 @@ app.delete("/api/movies/:id", async (req, res, next) => {
   }
 });
 
+app.put("/api/movies/:id", async (req, res, next) => {
+  try {
+    const movie = await Movie.findByPk(req.params.id);
+    res.send(await movie.update(req.body));
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.status || 500).send({ err });

@@ -19,8 +19,10 @@ const Movie = db.define("movie", {
 });
 
 Movie.addHook("beforeUpdate", (movie) => {
-  if (movie.rating > 5 || movie.rating < 1) {
-    throw error;
+  if (movie.rating > 4 || movie.rating < 2) {
+    throw "The rating should be between 1 and 5";
+  } else {
+    return;
   }
 });
 
