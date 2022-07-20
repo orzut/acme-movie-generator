@@ -38,7 +38,7 @@ app.delete("/api/movies/:id", async (req, res, next) => {
 app.put("/api/movies/:id", async (req, res, next) => {
   try {
     const movie = await Movie.findByPk(req.params.id);
-    res.send(await movie.update(req.body));
+    res.status(201).send(await movie.update(req.body));
   } catch (error) {
     next(error);
   }

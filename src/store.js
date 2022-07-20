@@ -55,13 +55,11 @@ const moviesReducer = (state = [], action) => {
     return state.filter((movie) => movie.id !== action.movie.id);
   }
   if (action.type === INCREMENT_RATING) {
-    action.movie = { ...action.movie, rating: action.movie.rating + 1 };
     return state.map((movie) =>
       movie.id === action.movie.id ? action.movie : movie
     );
   }
   if (action.type === DECREMENT_RATING) {
-    action.movie = { ...action.movie, rating: action.movie.rating - 1 };
     return state.map((movie) =>
       movie.id === action.movie.id ? action.movie : movie
     );
@@ -93,7 +91,9 @@ export const deleteMovie = (movie) => {
 export const incrementRating = (movie) => {
   return async (dispatch) => {
     try {
-      const updated = (await axios.put(`/api/movies/${movie.id}`, movie)).data;
+      const updatedMovie = { ...movie, rating: movie.rating + 1 };
+      const updated = (await axios.put(`/api/movies/${movie.id}`, updatedMovie))
+        .data;
       dispatch(_incrementRating(updated));
     } catch (err) {
       console.log(err.response.data);
@@ -105,7 +105,9 @@ export const incrementRating = (movie) => {
 export const decrementRating = (movie) => {
   return async (dispatch) => {
     try {
-      const updated = (await axios.put(`/api/movies/${movie.id}`, movie)).data;
+      const updatedMovie = { ...movie, rating: movie.rating - 1 };
+      const updated = (await axios.put(`/api/movies/${movie.id}`, updatedMovie))
+        .data;
       dispatch(_decrementRating(updated));
     } catch (err) {
       console.log(err.response.data);

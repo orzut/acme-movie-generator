@@ -1,9 +1,10 @@
 import { createRoot } from "react-dom/client";
 import React, { Component } from "react";
-import { faker } from "@faker-js/faker";
 import { Provider, connect } from "react-redux";
-import store, { generateMovie, fetchMovies } from "./store";
-import Movies from "./Movies";
+import store, { fetchMovies } from "./store";
+import Movies from "./components/Movies";
+import Home from "./components/Home";
+import { Route, HashRouter as Router } from "react-router-dom";
 
 const root = createRoot(document.querySelector("#root"));
 
@@ -14,9 +15,7 @@ class _App extends Component {
   render() {
     return (
       <main>
-        <button onClick={() => this.props.generateMovie()}>
-          Generate Random Movie
-        </button>
+        <Route path="/" component={Home} />
         <Movies />
       </main>
     );
@@ -26,8 +25,6 @@ class _App extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     loadMovies: () => dispatch(fetchMovies()),
-    generateMovie: () =>
-      dispatch(generateMovie({ name: faker.commerce.productName() })),
   };
 };
 
@@ -35,6 +32,8 @@ const App = connect(null, mapDispatchToProps)(_App);
 
 root.render(
   <Provider store={store}>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </Provider>
 );

@@ -29,7 +29,6 @@ Movie.addHook("beforeUpdate", (movie) => {
 const syncAndSeed = async () => {
   try {
     await db.sync({ force: true });
-    await Movie.create({ name: "Titanic" });
     console.log("db is seeded");
   } catch (ex) {
     console.log(ex);

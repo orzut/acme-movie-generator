@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { deleteMovie, incrementRating, decrementRating } from "./store";
+import { deleteMovie, incrementRating, decrementRating } from "../store";
 
-const Movies = ({ movies, deleteMovie, increment, decrement }) => {
-  const averageRating = (
-    movies.reduce((sum, movie) => {
-      return sum + movie.rating;
-    }, 0) / movies.length
-  ).toFixed(1);
+const Movies = ({
+  movies,
+  deleteMovie,
+  increment,
+  decrement,
+  averageRating,
+  rankedMovies,
+}) => {
   return (
     <div>
       <h2>The average rating is {!movies.length ? 0 : averageRating}</h2>
       <ul>
-        {movies.map((movie) => {
+        {rankedMovies.map((movie) => {
           return (
             <li key={movie.id}>
               <button onClick={() => deleteMovie(movie)}>x</button>
@@ -28,8 +30,16 @@ const Movies = ({ movies, deleteMovie, increment, decrement }) => {
 };
 
 const mapStateToProps = ({ movies }) => {
+  const rankedMovies = movies.sort((a, b) => b.rating - a.rating);
+  const averageRating = (
+    movies.reduce((sum, movie) => {
+      return sum + movie.rating;
+    }, 0) / movies.length
+  ).toFixed(1);
   return {
     movies,
+    averageRating,
+    rankedMovies,
   };
 };
 
